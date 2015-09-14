@@ -84,7 +84,7 @@ for j = 1:thetasize(1)
         reg = reg + Theta1(j, k) ^ 2;
     end
 end
-thetasize = size(Theta2)
+thetasize = size(Theta2);
 for j = 1:thetasize(1)
     for k = 2:thetasize(2)
         reg = reg + Theta2(j, k) ^ 2;
@@ -95,6 +95,40 @@ reg = lambda / (2 * m) * reg;
 J = J + reg;
 
 % -------------------------------------------------------------
+
+c = zeros(size(y, 1), num_labels);
+for k = 1:num_labels
+    c(:, k) = (y == k);
+end
+for t = 1:m
+  a_1 = X(t, :)';
+  z_2 = Theta1 * a_1;
+  a_2 = sigmoid(z_2);
+  a_2 = [1 ; a_2];
+  a_3 = sigmoid(Theta2 * a_2);
+  delta_3 = a_3 - c(t, :)';
+  delta_2 = Theta2' * delta_3;
+  delta_2 = delta_2(2:end);
+  delta_2 = delta_2 .* sigmoidGradient(z_2);
+  Theta1_grad = Theta1_grad + delta_2 * a_1';
+  Theta2_grad = Theta2_grad + delta_3 * a_2';
+end
+
+Theta1_grad = Theta1_grad ./ m;
+Theta2_grad = Theta2_grad ./ m;
+
+thetasize = size(Theta1);
+for j = 1:thetasize(1)
+    for k = 2:thetasize(2)
+        Theta1_grad(j,k) = Theta1_grad(j,k) + lambda / m * Theta1(j, k);
+    end
+end
+thetasize = size(Theta2);
+for j = 1:thetasize(1)
+    for k = 2:thetasize(2)
+        Theta2_grad(j,k) = Theta2_grad(j,k) + lambda / m * Theta2(j, k);
+    end
+end
 
 % =========================================================================
 
