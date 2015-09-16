@@ -40,7 +40,16 @@ error_val = zeros(length(lambda_vec), 1);
 %
 
 
+initial_theta = zeros(size(X, 2), 1);
+options = optimset('MaxIter', 200, 'GradObj', 'on');
 
+for i = 1:length(lambda_vec)
+    lambda = lambda_vec(i);
+    cost = @(t) linearRegCostFunction(X, y, t, lambda);
+    theta = fmincg(cost, initial_theta, options);
+    error_train(i) = linearRegCostFunction(X, y, theta, 0);
+    error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+end
 
 
 
