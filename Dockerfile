@@ -1,5 +1,6 @@
 FROM debian
 
-RUN apt-get update && apt-get install -y octave wget unzip vim less
+RUN apt-get update && apt-get install -y octave wget unzip vim less curl
 
-ADD . /app/
+ADD . /usr/src
+WORKDIR /usr/src
